@@ -1,0 +1,12 @@
+---
+apiVersion: "extensions/v1beta1"
+kind: "Ingress"
+metadata:
+  name: "helloworld-ingress"
+  namespace: "default"
+spec:
+  backend:
+    serviceName: "helloworld-service"
+    servicePort: 80
+  tls:
+  - secretName: "helloworld-cert"

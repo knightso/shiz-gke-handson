@@ -1,0 +1,41 @@
+---
+apiVersion: "apps/v1"
+kind: "Deployment"
+metadata:
+  name: "helloworld"
+  namespace: "default"
+  labels:
+    app: "helloworld"
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: "helloworld"
+  template:
+    metadata:
+      labels:
+        app: "helloworld"
+    spec:
+      containers:
+      - name: "helloworld-sha256-1"
+        image: "gcr.io/shiz-gke-handson/helloworld@sha256:b4ac2e788017744e3f2a4b986d67aecfa7cc8f0405cb4682d02b602b08c6fd4a"
+---
+apiVersion: "autoscaling/v2beta1"
+kind: "HorizontalPodAutoscaler"
+metadata:
+  name: "helloworld-hpa-cb1m"
+  namespace: "default"
+  labels:
+    app: "helloworld"
+spec:
+  scaleTargetRef:
+    kind: "Deployment"
+    name: "helloworld"
+    apiVersion: "apps/v1"
+  minReplicas: 1
+  maxReplicas: 5
+  metrics:
+  - type: "Resource"
+    resource:
+      name: "cpu"
+      targetAverageUtilization: 80
